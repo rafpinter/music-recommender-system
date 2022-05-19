@@ -1,0 +1,6 @@
+*.json
+*.csv
+*.zip
+*.pyc
+.cache
+!spotify_codes.json
