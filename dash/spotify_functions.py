@@ -1,25 +1,10 @@
 # defs
 from flask import url_for
-import spotipy
-from spotipy.oauth2 import SpotifyClientCredentials, SpotifyOAuth
+from spotipy.oauth2 import SpotifyOAuth
 import json
 import pandas as pd
 from re import findall
 # # Main page
-
-# def get_token(scope,client_id,client_secret,redirect_uri):
-    
-#     token_info = session.get(TOKEN_INFO)
-#     now = int(time.time())
-    
-#     is_expired = token_info['expires_at'] - now < 60
-    
-#     if is_expired:
-#         sp_oauth = SpotifyOAuth(scope=scope, client_id=client_id, client_secret=client_secret, redirect_uri=redirect_uri)
-#         token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
-    
-#     return token_info
-
 
 def load_json(path):
     with open(path, 'r', encoding="utf8") as f:
@@ -36,10 +21,8 @@ def create_spotify_oauth():
         scope='user_library_read'
     )
     
-    
 def new_playlist_id(data):
     return data.playlist_id.max()
- 
 
 def load_data():
 

@@ -18,54 +18,39 @@ tab4_content = html.Div(
                         html.Br(),
                         
                          html.H3("X-Axis"),
-                         dbc.Select(
-                            id="pl-x",
+                         dbc.RadioItems(
+                            id="pl-x_strip",
                             options=[
-                                {"label": "Factors", "value": "factors"},
-                                {"label": "Iterations", "value": "iterations"},
-                                {"label": "Regularization", "value": "regularization"},
-                                {"label": "Database Percentage", "value": "db_fraction"},
-                                {"label": "Alpha", "value": "alpha"},
+                                {"label": "Popularity", "value": "popularity"},
+                                {"label": "Length", "value": "length"},
+                                {"label": "Acousticness", "value": "acousticness"},
+                                {"label": "Danceability", "value": "danceability"},
+                                {"label": "Energy", "value": "energy"},
+                                {"label": "Instrumentalness", "value": "instrumentalness"},
+                                {"label": "Liveness", "value": "liveness"},
+                                {"label": "Loudness", "value": "loudness"},
+                                {"label": "Speechiness", "value": "speechiness"},
+                                {"label": "Valence", "value": "valence"},
+                                {"label": "Tempo", "value": "tempo"},
+                                {"label": "Time signature", "value": "time_signature"},    
                             ],
+                            value='popularity'
                         ),
                          
                         html.Br(),
                         html.Br(),
                         
-                        html.H3("Color"),
-                        dbc.Select(
-                            id="pl-color",
-                            options=[
-                                        {"label": "Factors", "value": "factors"},
-                                        {"label": "Iterations", "value": "iterations"},
-                                        {"label": "Regularization", "value": "regularization"},
-                                        {"label": "Database Percentage", "value": "db_fraction"},
-                                        {"label": "Alpha", "value": "alpha"},
-                                    ],
-                                ),
-                        
-                        html.Br(),
-                        html.Br(),
-                        
-                        dbc.Button(
-                            "Update graph", 
-                            color="success", 
-                            id='pl-df_exec_button',
-                            className="me-1",
-                            n_clicks=0
-                        ),
                     ],
                     width={"size": 2}
                 ),
                 dbc.Col(
                     [
-                        dcc.Graph(id='pl-line_plot', figure={}),
+                        dcc.Graph(id='pl-strip_plot', figure={}),
                     ],
                 ),
             ],
         ),        
 
-        
         html.Br(),
         html.Br(),
         

@@ -1,6 +1,6 @@
 from dash import dcc
 import dash_bootstrap_components as dbc
-from dash import html, dash_table
+from dash import html
 
 
 tab3_content = html.Div(
@@ -12,67 +12,63 @@ tab3_content = html.Div(
             [
                 dbc.Col(
                     [
-                        html.H3("Average metrics"),
-                        dbc.Col(
-                            dcc.Graph(id='pl-radar_plot', figure={}),
-                        )
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        
+                         html.H3("X-Axis"),
+                         dbc.Select(
+                            id="pl-x",
+                            options=[
+                                {"label": "Factors", "value": "factors"},
+                                {"label": "Iterations", "value": "iterations"},
+                                {"label": "Regularization", "value": "regularization"},
+                                {"label": "Database Percentage", "value": "db_fraction"},
+                                {"label": "Alpha", "value": "alpha"},
+                            ],
+                        ),
+                         
+                        html.Br(),
+                        html.Br(),
+                        
+                        html.H3("Color"),
+                        dbc.Select(
+                            id="pl-color",
+                            options=[
+                                        {"label": "Factors", "value": "factors"},
+                                        {"label": "Iterations", "value": "iterations"},
+                                        {"label": "Regularization", "value": "regularization"},
+                                        {"label": "Database Percentage", "value": "db_fraction"},
+                                        {"label": "Alpha", "value": "alpha"},
+                                    ],
+                                ),
+                        
+                        html.Br(),
+                        html.Br(),
+                        
+                        dbc.Button(
+                            "Update graph", 
+                            color="success", 
+                            id='pl-df_exec_button',
+                            className="me-1",
+                            n_clicks=0
+                        ),
                     ],
-                    width=12
-                )
-            ]
-        ),
-        
-        html.Br(),
-        html.Br(),
-        
-        dbc.Row(
-            [
+                    width={"size": 2}
+                ),
                 dbc.Col(
                     [
-                        html.H3("Release year"),
-                        dbc.Col(
-                            dcc.Graph(id='pl-year_plot', figure={}),
-                        )
+                        dcc.Graph(id='pl-line_plot', figure={}),
                     ],
-                    width=12
-                )
-            ]
-        ),
-        html.Br(),
-        html.Br(),
-        
-        dbc.Row(
-            [
-                dbc.Col(
-                    [
-                        html.H3("Keys"),
-                        dbc.Col(
-                            dcc.Graph(id='pl-key_mode_plot', figure={}),
-                        )
-                    ],
-                    width=12
                 ),
             ],
-        ),
-                
+        ),        
+
+        
         html.Br(),
         html.Br(),
         
-        dbc.Row(
-            [
-                dbc.Col(
-                    [
-                        html.H3("Tempo"),
-                        dbc.Col(
-                            dcc.Graph(id='pl-tempo_plot', figure={}),
-                        )
-                    ],
-                    width=12
-                ),
-            ]
-        ),
-        html.Br(),
-        html.Br(),
     ]
 
 )

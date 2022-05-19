@@ -1,6 +1,6 @@
 from dash import dcc
 import dash_bootstrap_components as dbc
-from dash import html
+from dash import html, dash_table
 
 
 tab5_content = html.Div(
@@ -12,45 +12,24 @@ tab5_content = html.Div(
             [
                 dbc.Col(
                     [
-                        html.Br(),
-                        html.Br(),
-                        html.Br(),
-                        html.Br(),
-                        
-                         html.H3("X-Axis"),
-                         dbc.RadioItems(
-                            id="pl-x_strip",
-                            options=[
-                                {"label": "Popularity", "value": "popularity"},
-                                {"label": "Length", "value": "length"},
-                                {"label": "Acousticness", "value": "acousticness"},
-                                {"label": "Danceability", "value": "danceability"},
-                                {"label": "Energy", "value": "energy"},
-                                {"label": "Instrumentalness", "value": "instrumentalness"},
-                                {"label": "Liveness", "value": "liveness"},
-                                {"label": "Loudness", "value": "loudness"},
-                                {"label": "Speechiness", "value": "speechiness"},
-                                {"label": "Valence", "value": "valence"},
-                                {"label": "Tempo", "value": "tempo"},
-                                {"label": "Time signature", "value": "time_signature"},    
-                            ],
-                            value='popularity'
+                        html.H3("Training parameters"),
+                        dbc.Col(
+                            dash_table.DataTable(id='pl-parameters'),
                         ),
-                         
+                        
                         html.Br(),
                         html.Br(),
                         
+                        html.H3("Raw data"),
+                        dbc.Col(
+                            dash_table.DataTable(id='pl-table'),
+                        )
                     ],
-                    width={"size": 2}
-                ),
-                dbc.Col(
-                    [
-                        dcc.Graph(id='pl-strip_plot', figure={}),
-                    ],
-                ),
-            ],
-        ),        
-
+                    width=12
+                )
+            ]
+        ),
+        
         html.Br(),
         html.Br(),
         

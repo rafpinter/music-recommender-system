@@ -25,7 +25,6 @@ from apps.playlists import main_page
 from apps.playlists.callbacks import *
 from apps.playlists.graphs import *
 
-
 from header import header
 
 from apps.playlists.class_playlists import PLAYLISTRECSYS
@@ -52,6 +51,7 @@ with open(path_to_credentials, 'r', encoding="utf8") as f:
 
 playlistrecsys.client_id = codes['client_id']
 playlistrecsys.client_secret = codes['client_secret']
+
 
 #  ----------------------
 
@@ -649,7 +649,4 @@ def export_playlist(n):
 # ## -----------------------------------------------
 
 if __name__ == '__main__':
-    app.run_server(debug=True, use_reloader=False)
-    
-
-# ## -----------------------------------------------
+    app.run_server(debug=False, use_reloader=False)
