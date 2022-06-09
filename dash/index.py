@@ -1,3 +1,4 @@
+from datetime import datetime
 import time
 from base64 import b64encode
 from flask import (
@@ -155,8 +156,6 @@ def login():
 
     print(type(res))
     print(res)
-
-
     print('SAINDO DO LOGIN')
     return res
 
@@ -645,6 +644,42 @@ def export_playlist(n):
         # print('res_add status:', res_add.status_code)
         
         return 'Done!'
+
+@app.callback(
+    Output("pl-download_raw_data", 'data'),
+    Input("pl-download_raw_data_button", 'n_clicks'),
+    prevent_initial_callback=True
+)
+def download_raw_data(n):
+    """Download dos dados crus das recomendações
+
+    Args:
+        n (int): número de vezes que o botão é pressionado
+
+    Returns:
+        csv: dataframe
+    """
+    if n:
+        time
+        return dcc.send_data_frame(playlistrecsys.df.to_csv, "raw_data_{:%Y%m%d_%H%M%S}.csv".format(datetime.now()))
+
+@app.callback(
+    Output("pl-download_exec_time", 'data'),
+    Input("pl-download_exec_time_button", 'n_clicks'),
+    prevent_initial_callback=True
+)
+def download_exec_time(n):
+    """Download dos dados crus de execução dos modelos
+
+    Args:
+        n (int): número de vezes que o botão é pressionado
+
+    Returns:
+        csv: dataframe
+    """
+    if n:
+        time
+        return dcc.send_data_frame(playlistrecsys.df_exec.to_csv, "execution_data_{:%Y%m%d_%H%M%S}.csv".format(datetime.now()))
 
 # ## -----------------------------------------------
 

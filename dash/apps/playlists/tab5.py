@@ -33,6 +33,26 @@ tab5_content = html.Div(
         html.Br(),
         html.Br(),
         
+        dbc.Button("Download raw data", 
+                    color="download_raw_data_button", 
+                    id='pl-download_raw_data_button',
+                    className="me-1",
+                    n_clicks=0
+                    ),
+        dcc.Download(id="pl-download_raw_data"),
+        
+        html.Br(),
+        
+        dbc.Button("Download execution time data", 
+            color="download_exec_time_button", 
+            id='pl-download_exec_time_button',
+            className="me-1",
+            n_clicks=0
+            ),
+        dcc.Download(id="pl-download_exec_time"),
+        
+        html.Br(),
+        html.Br(),
     ]
 
 )

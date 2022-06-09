@@ -27,7 +27,7 @@ def n_recs_input():
                             type="number",
                             min=1,
                             max=100,
-                            value=15,
+                            value=20,
                         ),
                     ],
                 width=3
@@ -63,7 +63,7 @@ def db_fraction():
                             {"label": "10%", "value": 0.1},
                             {"label": "1%", "value": 0.01},
                         ],
-                        value=0.01,
+                        value=1,
                     ),
                 ],
             width=2

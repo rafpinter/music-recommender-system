@@ -68,16 +68,16 @@ def implicit_recsys(url,
     sparse_item_user = sparse.csr_matrix((data['plays'].astype(float), (data['song_id'], data['playlist_id'])))
     sparse_user_item = sparse.csr_matrix((data['plays'].astype(float), (data['playlist_id'], data['song_id'])))
     
-    model = implicit.als.AlternatingLeastSquares(**args)
+    model = implicit.als.AlternatingLeastSquares(random_state=42, **args)
     
-    data_conf = (sparse_item_user * alpha).astype('double')
+    data_conf = (sparse_user_item * alpha).astype('double')
     
     model.fit(data_conf)  
     
     print('\nYour recommendations:\n')
 
-    recs = model.recommend(new_playlist_id(data), sparse_user_item, N=N_RECOMMENDATIONS, filter_already_liked_items=True)
-    recs_ids = [i[0] for i in recs]
+    recs = model.recommend(new_playlist_id(data), data_conf[new_playlist_id(data)], N=N_RECOMMENDATIONS, filter_already_liked_items=True)
+    recs_ids = recs[0]
     recs_str = ''
 
     for idx in recs_ids:
