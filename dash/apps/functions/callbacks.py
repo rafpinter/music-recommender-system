@@ -4,11 +4,14 @@ import implicit
 from re import findall
 import scipy.sparse as sparse
 from .implicit_functions import implicit_recommend
-
-PATH = pathlib.Path(__file__).parent
-PATH = PATH.joinpath("../").resolve()
-PATH = PATH.joinpath("../").resolve()
-from spotify_functions import (top_recs_to_string, get_track_ids, maps_playlist, get_song_info, adds_new_playlist_to_df, new_playlist_id)
+from .spotify_functions import (
+    top_recs_to_string,
+    get_track_ids,
+    maps_playlist,
+    get_song_info,
+    adds_new_playlist_to_df,
+    new_playlist_id
+    )
 
 def get_playlist(url, alg, id_to_num, song_infos, num_to_id, CREDENTIALS, sp):
     

@@ -12,7 +12,7 @@ PATH = pathlib.Path(__file__).parent
 PATH = PATH.joinpath("../").resolve()
 PATH = PATH.joinpath("../").resolve()
 
-from spotify_functions import (
+from apps.functions.spotify_functions import (
     get_all_track_features,
     get_track_ids,
     maps_playlist,

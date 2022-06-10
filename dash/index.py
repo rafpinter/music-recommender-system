@@ -13,12 +13,13 @@ from flask import (
     request,
     session,
 )
-import da3sh_bootstrap_components as dbc
+import dash_bootstrap_components as dbc
 from urllib.parse import urlencode
 from dash import html, dcc, Dash
 from dash.dependencies import Output, Input, State
 from apps.screen import playlist_continuation
 from apps.screen import main_page
+from apps.screen.header import header
 from apps.functions.class_playlists import PLAYLISTRECSYS
 from apps.functions.graphs import *
 from apps.functions.callbacks import *
@@ -28,7 +29,6 @@ from apps.functions.spotify_functions import (
     connect_to_spotify, 
     get_playlist_metadata
     )
-from header import header
 
 # Global variables
 

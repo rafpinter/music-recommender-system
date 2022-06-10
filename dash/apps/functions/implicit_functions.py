@@ -1,12 +1,7 @@
+import numpy as np
 import scipy.sparse as sparse
 from sklearn.preprocessing import MinMaxScaler
-import numpy as np
-
-import pathlib
-PATH = pathlib.Path(__file__).parent
-PATH = PATH.joinpath("../").resolve()
-PATH = PATH.joinpath("../").resolve()
-from spotify_functions import top_recs_to_string
+from .spotify_functions import top_recs_to_string
 
 def implicit_recommend(user_id, sparse_user_item, model, song_infos, num_to_id, num_items):
     
