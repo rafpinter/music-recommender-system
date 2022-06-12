@@ -14,15 +14,6 @@ def header():
                                             [
                                                 
                                                 html.H2("Recommender System"),
-                                                # html.Div(
-                                                #         [
-                                                #             # dbc.Nav(
-                                                #             #     [
-                                                #             #         dbc.NavLink("Playlist Continuation", href="/playlist-continuation"),
-                                                #             #     ]
-                                                #             ),
-                                                    # ]
-                                                # )
                                             ]
                                         )
                                     ]

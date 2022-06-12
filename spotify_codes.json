@@ -1,5 +1,5 @@
 {
-    "client_id" :  "yourClientID",
+    "client_id" :  "yourClientId",
     "client_secret" : "yourClientSecret",
     "user": "yourUser"
 }

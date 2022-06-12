@@ -1,5 +1,11 @@
+import os
 import time
+import json
+import string
+import secrets
+import requests
 from base64 import b64encode
+from datetime import datetime
 from flask import (
     abort,
     make_response,
@@ -7,50 +13,34 @@ from flask import (
     request,
     session,
 )
-import json
-import os
-import requests
-import secrets
-import string
+import dash_bootstrap_components as dbc
 from urllib.parse import urlencode
-
 from dash import html, dcc, Dash
 from dash.dependencies import Output, Input, State
-import dash_bootstrap_components as dbc
-
-from apps.playlists import playlist_continuation
-from apps.playlists import main_page
-
-
-from apps.playlists.callbacks import *
-from apps.playlists.graphs import *
-
-from header import header
-
-from apps.playlists.class_playlists import PLAYLISTRECSYS
-
-from spotify_functions import (
+from apps.screen import playlist_continuation
+from apps.screen import main_page
+from apps.screen.header import header
+from apps.functions.class_playlists import PLAYLISTRECSYS
+from apps.functions.graphs import *
+from apps.functions.callbacks import *
+from apps.functions.spotify_functions import (
     load_json, 
     load_data, 
     connect_to_spotify, 
     get_playlist_metadata
     )
 
+# Global variables
+
 path_to_credentials = 'spotify_codes.json'
-    
-CREDENTIALS = load_json(path_to_credentials)
+CREDENTIALS = load_json(path_to_credentials)    
 
 song_infos, dataframe, num_to_id, id_to_num = load_data()
 
-# Global variables
 playlistrecsys =  PLAYLISTRECSYS()
 playlistrecsys.sp = connect_to_spotify()
-
-with open(path_to_credentials, 'r', encoding="utf8") as f:
-    codes = json.load(f)
-
-playlistrecsys.client_id = codes['client_id']
-playlistrecsys.client_secret = codes['client_secret']
+playlistrecsys.client_id = CREDENTIALS['client_id']
+playlistrecsys.client_secret = CREDENTIALS['client_secret']
 
 
 #  ----------------------
@@ -87,133 +77,24 @@ app.layout = dbc.Container(
 )
 
 def refresh():
-    '''Refresh access token.'''
-    print('log | refresh | 1')
-    payload = {
-        'grant_type': 'refresh_token',
-        'refresh_token': session.get('tokens').get('refresh_token'),
-    }
-    authorization = b64encode(f'{playlistrecsys.client_id}:{playlistrecsys.client_secret}'.encode()).decode()
-    headers = {'Content-Type': 'application/x-www-form-urlencoded',
-               'Authorization': f'Basic {authorization}'}
-    print('log | refresh | 2')
-    res = requests.post(
-        playlistrecsys.TOKEN_URL, auth=(playlistrecsys.client_id, playlistrecsys.client_secret), data=payload, headers=headers
-    )
-    print('log | refresh | 3')
-    res_data = res.json()
-    print('log | refresh | 4')
-    # Load new token into session
-    session['tokens']['access_token'] = res_data.get('access_token')
-
-    return session['tokens']['access_token']
+    """Refreshing the access token"""
+    return refresh_acess_token(session, playlistrecsys)
 
 
 @server.route('/login')
 def login():
-    '''Login or logout user.
+    """Login or logout user.
 
     Note:
         Login and logout process are essentially the same. Logout forces
         re-login to appear, even if their token hasn't expired.
-    '''
-    print('ENTROU NO LOGIN')
-
-    # redirect_uri can be guessed, so let's generate
-    # a random `state` string to prevent csrf forgery.
-    state = ''.join(
-        secrets.choice(string.ascii_uppercase + string.digits) for _ in range(16)
-    )
-
-    # Request authorization from user
-    scope = 'user-read-private user-read-email'
-
-    loginout = 'login'
-
-    if loginout == 'logout':
-        payload = {
-            'client_id': playlistrecsys.client_id,
-            'response_type': 'code',
-            'redirect_uri': playlistrecsys.LOGIN_REDIRECT_URI,
-            'state': state,
-            'scope': playlistrecsys.scope,
-            'show_dialog': True,
-        }
-    elif loginout == 'login':
-        payload = {
-            'client_id': playlistrecsys.client_id,
-            'response_type': 'code',
-            'redirect_uri': playlistrecsys.LOGIN_REDIRECT_URI,
-            'state': state,
-            'scope': playlistrecsys.scope,
-        }
-    else:
-        abort(404)
-
-    res = make_response(redirect(f'{playlistrecsys.AUTH_URL}/?{urlencode(payload)}'))
-    res.set_cookie('spotify_auth_state', state)
-
-    print(type(res))
-    print(res)
-
-
-    print('SAINDO DO LOGIN')
-    return res
+    """
+    return login_user(playlistrecsys)
 
 
 @server.route('/callback')
 def callback():
-    print('ENTROU NO CALLBACK')
-    error = request.args.get('error')
-    code = request.args.get('code')
-    state = request.args.get('state')
-    stored_state = request.cookies.get('spotify_auth_state')
-
-    # Check state
-    if state is None or state != stored_state:
-        app.logger.error('Error message: %s', repr(error))
-        app.logger.error('State mismatch: %s != %s', stored_state, state)
-        abort(400)
-
-    # Request tokens with code we obtained
-    payload = {
-        'grant_type': 'authorization_code',
-        'code': code,
-        'redirect_uri': playlistrecsys.LOGIN_REDIRECT_URI,
-    }
-
-    # `auth=(playlistrecsys.client_id, SECRET)` basically wraps an 'Authorization'
-    # header with value:
-    # b'Basic ' + b64encode((playlistrecsys.client_id + ':' + SECRET).encode())
-    res = requests.post(playlistrecsys.TOKEN_URL, 
-                        auth=(playlistrecsys.client_id, playlistrecsys.client_secret), 
-                        data=payload)
-    
-    res_data = res.json()
-
-    if res_data.get('error') or res.status_code != 200:
-        app.logger.error(
-            'Failed to receive token: %s',
-            res_data.get('error', 'No error information received.'),
-        )
-        abort(res.status_code)
-
-    # Load tokens into session
-    session['tokens'] = {
-        'access_token': res_data.get('access_token'),
-        'refresh_token': res_data.get('refresh_token'),
-    }
-    
-    # saving user data
-    headers = {'Authorization': f"Bearer {session['tokens'].get('access_token')}"}
-    res = requests.get(playlistrecsys.ME_URL, headers=headers)
-    res_data = res.json()
-    playlistrecsys.user = res_data
-
-    print('user:', playlistrecsys.user)
-
-    print('SAINDO DO CALLBACK')
-    return redirect('http://127.0.0.1:8050/playlist-continuation')
+    return callback_route(playlistrecsys)
 
 
 
@@ -223,7 +104,6 @@ def callback():
         Input("url", "pathname"),
         Input('url_refresh', 'pathname')
     ],
-    # prevent_initial_call=True
     )
 def render_page_content(pathname,url_refresh):
     """render_page_content
@@ -234,15 +114,11 @@ def render_page_content(pathname,url_refresh):
 
     """
     if url_refresh == "/":
-        # return html.P("This is the content of the home page!")
         return main_page.layout
 
-    elif url_refresh == "/playlist-continuation":
-        
+    elif url_refresh == "/playlist-continuation":        
         return playlist_continuation.layout
-    # If the user tries to reach a different page, return a 404 message
-    # else:
-    #     return html.P("Page not found")
+
     return
 
 
@@ -254,11 +130,9 @@ def render_page_content(pathname,url_refresh):
     prevent_initia_callback=True,    
 )
 def user_login(n):
-    
-    if n > 0:    
-        
+    """Redirect to user login"""
+    if n > 0:
         return '\login'
-
 
 
 # playlist_continuation
@@ -293,12 +167,7 @@ def pl_metadata(n, url):
     """
     
     if n > 0:
-        (img, 
-         name, 
-         owner, 
-         followers, 
-         description, 
-         total_n_tracks) = get_playlist_metadata(playlistrecsys.sp, url)
+        (img, name, owner, followers, description, total_n_tracks) = get_playlist_metadata(playlistrecsys.sp, url)
         
         playlistrecsys.fill_pl_metadata(img, name, owner, followers, description, total_n_tracks)
         
@@ -307,7 +176,6 @@ def pl_metadata(n, url):
 
 @app.callback(
     Output('pl-md_text_playlist', 'children'),
-    # [Input('url_input', 'value')],
     [
         Input('pl-trigger_button', 'n_clicks')
     ],
@@ -356,8 +224,6 @@ def user_playlist_info(n, url, n_recs):
         Output('pl-md_text_recomendation', 'children'),
         Output("pl-loading-output-2", "children"),
         Output("pl-export", "disabled"),
-        # Output('pl-alg_name', 'children'),
-        # Output('pl-execution_time', 'children'),
     ],
     [
         Input('pl-trigger_button', 'n_clicks')
@@ -482,29 +348,18 @@ def creating_plots(recs):
 def recommended_playlist_info(n):
     
     if n > 0:
-        # print("getting oauth")
-        # sp_oauth = SpotifyOAuth(scope=playlistrecsys.scope, 
-        #                   client_id=playlistrecsys.client_id,
-        #                   client_secret=playlistrecsys.client_secret,
-        #                   redirect_uri=playlistrecsys.redirect_uri)
-
         
         print(playlistrecsys.sp.current_user())
         
-        print("new_playlist:")
         new_playlist = playlistrecsys.sp.user_playlist_create(user=playlistrecsys.sp.current_user(),
                                                               name='test_playlist',
                                                               public=True,
                                                               description='created with app',
                                                               )
-        print(new_playlist)
         
-        print('last_items:')
         last_items = playlistrecsys.get_track_ids_last_train()
-        print(last_items)
         
         playlistrecsys.sp.playlist_add_items(new_playlist['id'], items=last_items)
-        print('songs added')
         
         return ["playlist loaded"]
 
@@ -528,7 +383,6 @@ def update_graph(n, color, x):
     if n > 0:
         figure = create_line_plot_df_exec(playlistrecsys, x, color)
         return [figure]
-    # return ['']
     
     
 @app.callback(
@@ -544,7 +398,6 @@ def dispersion_plot(x):
     
         figure = create_dispersion_plot(playlistrecsys.df,x)
         return [figure]
-    # return ['']
     
     
 @app.callback(
@@ -596,55 +449,48 @@ def update_datatable_parameters(n):
         Input("pl-export", "n_clicks")
     ]
 )
-def export_playlist(n):
-    
+def export_playlist(n):    
     if n > 0:
-
-        # token = refresh()
-
-        token = session['tokens']['access_token']
-
-        print(f'token: {token}')
-
-        headers = {'Authorization': f"Bearer {token}",
-                   "Content-Type": "application/json"}
-        res_me = requests.get(playlistrecsys.ME_URL, headers=headers)
         
-        # print('res_me', res_me.text)
-        
-        user_id = playlistrecsys.user['id']
-        
-        # criando playlist 
-        data = json.dumps({
-            'name': 'Nova Playlist: SpotiRecs',
-            'description': 'Playlist criada a partir do melhor software de recomendação de musicas',
-            'public': True
-        })
-        
-        url = f'{playlistrecsys.CREATE_PLAYLIST_URL}/{user_id}/playlists'
-        # print('url', url)
-        
-        res_crpl = requests.post(url, data = data, headers=headers)
-        # print('res_crpl', res_crpl.text)        
-        # print('json res_crpl:', res_crpl)
-        new_playlist_id = res_crpl.json()["id"]
-        # print('new_playlist_id:', new_playlist_id)
-
-        # adicionando músicas na playlist
-        add_url = f'{playlistrecsys.ADD_SONGS_PLAYLIST_URL}/{new_playlist_id}/tracks'
-        ids = list(playlistrecsys.get_track_ids_last_train())
-        uris = [f'spotify:track:{x}' for x in ids]
-        
-        # print('add_url', add_url)
-        # print('uris:', uris)
-        body = json.dumps({
-            'uris': uris
-        })
-        res_add = requests.post(add_url, data=body, headers=headers)
-        # print('res_add:', res_add.text)        
-        # print('res_add status:', res_add.status_code)
+        export_playlist_to_spotify(session, playlistrecsys)
         
         return 'Done!'
+
+@app.callback(
+    Output("pl-download_raw_data", 'data'),
+    Input("pl-download_raw_data_button", 'n_clicks'),
+    prevent_initial_callback=True
+)
+def download_raw_data(n):
+    """Download dos dados crus das recomendações
+
+    Args:
+        n (int): número de vezes que o botão é pressionado
+
+    Returns:
+        csv: dataframe
+    """
+    if n:
+        return dcc.send_data_frame(playlistrecsys.df.to_csv, 
+                                   "raw_data_{:%Y%m%d_%H%M%S}.csv".format(datetime.now()))
+
+@app.callback(
+    Output("pl-download_exec_time", 'data'),
+    Input("pl-download_exec_time_button", 'n_clicks'),
+    prevent_initial_callback=True
+)
+def download_exec_time(n):
+    """Download dos dados crus de execução dos modelos
+
+    Args:
+        n (int): número de vezes que o botão é pressionado
+
+    Returns:
+        csv: dataframe
+    """
+    if n:
+        return dcc.send_data_frame(playlistrecsys.df_exec.to_csv,
+                                   "execution_data_{:%Y%m%d_%H%M%S}.csv".format(datetime.now()))
 
 # ## -----------------------------------------------
 

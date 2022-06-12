@@ -11,7 +11,7 @@ implicit_inputs = [
                     dbc.Input(
                         id='pl-implicit_factors',
                         type='number',
-                        value=1,
+                        value=200,
                     ),  
                 ]
             ),
@@ -22,7 +22,7 @@ implicit_inputs = [
                     dbc.Input(
                         id='pl-implicit_regularization',
                         type='number',
-                        value=0.1,
+                        value=1,
                     ),
                 ]
             ),
@@ -34,7 +34,7 @@ implicit_inputs = [
                         id='pl-implicit_iterations',
                         type='number',
                         min=1,
-                        value=1,
+                        value=10,
                     ),
                 ]
             ),
@@ -46,7 +46,7 @@ implicit_inputs = [
                         id='pl-implicit_alpha',
                         type='number',
                         min=1,
-                        value=15,
+                        value=1,
                     ),
                 ]
             ),
