@@ -1,4 +1,4 @@
-# spotify-recommendation-system
+# music-recommender-system
 
 This project is an ongoing submition for the [Spotify Million Playlist Dataset Challenge](https://www.aicrowd.com/challenges/spotify-million-playlist-dataset-challenge). It creates an interactive Plotly Dash web interface to test different recommender systems.
 
