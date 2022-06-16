@@ -14,18 +14,6 @@ def loads_json(path):
 
 def extract_playlist(playlists):
     """extract_playlist
-    
-    Recebe:
-    data[0]['tracks']
-    
-    para cada playlist:
-        - iterar pelas músicas:
-            - verificar se a música está no dict
-            - se sim:
-                - passar para a próxima música
-            - se não:
-                - adicionar infos da track no song_infos
-
     """
     
     global set_of_songs

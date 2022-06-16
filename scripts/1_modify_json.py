@@ -30,10 +30,6 @@ root_directory = r'million-playlist-dataset'
 zipped_file = root_directory + '\spotify_million_playlist_dataset.zip'
 jsons_directory = root_directory + '\data'
 
-# Unzipping the files
-# with ZipFile(zipped_file, 'r') as zip_folder:
-#     zip_folder.extractall(root_directory)
-
 list_of_files = os.listdir(jsons_directory)
 
 myfile = open('data\\all_jsons.json', 'a')
