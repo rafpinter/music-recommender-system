@@ -66,7 +66,7 @@ Once you have placed the `.zip` file in the `million-playlist-dataset/` folder, 
 
 ### 3. Run the application
 
-To run the application, execute the file `dash/app.py`.
+To run the application, execute the file `dash/index.py`.
 
 
 ---
