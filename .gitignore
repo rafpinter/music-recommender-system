@@ -3,4 +3,4 @@
 *.zip
 *.pyc
 .cache
-!spotify_codes.json
+*.parquet

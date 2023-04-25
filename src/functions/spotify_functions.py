@@ -12,7 +12,7 @@ def load_json(path):
     
 def create_spotify_oauth():
     
-    codes = load_json(r'C:\Users\rafaela.pinter_dp6\Documents\playlists-recsys\data\spotify_codes.json') 
+    codes = load_json('spotify_codes.json') 
     
     return SpotifyOAuth(
         client_id=codes['client_id'],
@@ -26,17 +26,17 @@ def new_playlist_id(data):
 
 def load_data():
 
-    with open(r'data\songs_infos.json', encoding="utf8") as json_file:
+    with open('songs_infos.json', encoding="utf8") as json_file:
         song_infos = json.load(json_file)
 
-    data = pd.read_csv(r'data\df_playlist_and_songs.csv')
+    data = pd.read_parquet('data/mod_df_playlist_and_songs.parquet')
     data['plays'] = 1
 
     # Num to id
-    num_to_id = load_json(r'data\num_to_id.json')
+    num_to_id = load_json('data/num_to_id.json')
 
     # id to num
-    id_to_num = load_json(r'data\id_to_num.json')
+    id_to_num = load_json('data/id_to_num.json')
             
     return song_infos, data, num_to_id, id_to_num
 
