@@ -2,8 +2,8 @@ from dash import html
 import dash_bootstrap_components as dbc
 
 # components
-from apps.screen.inputs import url_input, submit_button, db_fraction, n_recs_input
-from apps.functions.specific_inputs_implicit import implicit_specific_input
+from src.screen.inputs import url_input, submit_button, db_fraction, n_recs_input
+from src.functions.specific_inputs_implicit import implicit_specific_input
 
 # tabs
 from .tabs import tabs

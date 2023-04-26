@@ -2,6 +2,22 @@ import random
 import pathlib
 import implicit
 from re import findall
+import secrets
+import string
+import time
+from base64 import b64encode
+from flask import (
+    abort,
+    make_response,
+    redirect,
+    request,
+    session,
+)
+import json
+import os
+import requests
+
+from urllib.parse import urlencode
 import scipy.sparse as sparse
 from .implicit_functions import implicit_recommend
 from .spotify_functions import (

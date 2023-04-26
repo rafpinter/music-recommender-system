@@ -6,18 +6,18 @@ from dataclasses import dataclass, field
 import pandas as pd
 from re import findall
 
-
 import pathlib
 PATH = pathlib.Path(__file__).parent
 PATH = PATH.joinpath("../").resolve()
 PATH = PATH.joinpath("../").resolve()
 
-from apps.functions.spotify_functions import (
+from src.functions.spotify_functions import (
     get_all_track_features,
     get_track_ids,
     maps_playlist,
     get_song_info,
     )
+
 
 @dataclass
 class PLAYLISTRECSYS:
@@ -91,15 +91,7 @@ class PLAYLISTRECSYS:
     ADD_SONGS_PLAYLIST_URL: str = field(default='https://api.spotify.com/v1/playlists')
     LOGIN_REDIRECT_URI: str = field(default='http://127.0.0.1:8050/callback')
     
-    # def __post_init__(self):
-        
-    #     if self.OS == 'win':
-            
 
-
-
-
-        
     def __update_df_recs(self, df):
         self.df_recs = pd.concat([self.df_recs, df])
     

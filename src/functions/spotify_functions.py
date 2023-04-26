@@ -26,17 +26,17 @@ def new_playlist_id(data):
 
 def load_data():
 
-    with open('songs_infos.json', encoding="utf8") as json_file:
+    with open('../spotify-recommendation-system/data/songs_infos.json', encoding="utf8") as json_file:
         song_infos = json.load(json_file)
 
-    data = pd.read_parquet('data/mod_df_playlist_and_songs.parquet')
+    data = pd.read_parquet('../spotify-recommendation-system/data/df_playlist_and_songs.parquet')
     data['plays'] = 1
 
     # Num to id
-    num_to_id = load_json('data/num_to_id.json')
+    num_to_id = load_json('../spotify-recommendation-system/data/num_to_id.json')
 
     # id to num
-    id_to_num = load_json('data/id_to_num.json')
+    id_to_num = load_json('../spotify-recommendation-system/data/id_to_num.json')
             
     return song_infos, data, num_to_id, id_to_num
 
@@ -50,7 +50,7 @@ def connect_to_spotify():
     import spotipy
     from spotipy.oauth2 import SpotifyClientCredentials
 
-    path = 'spotify_codes.json'        
+    path = '../spotify-recommendation-system/spotify_codes.json'        
  
     with open(path, 'r', encoding="utf8") as f:
         codes = json.load(f)

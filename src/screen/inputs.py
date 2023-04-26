@@ -38,7 +38,7 @@ def submit_button():
                     [
                         html.P('\n'),
                         dbc.Button(
-                            "Train", 
+                            "Get recommendations", 
                             color="success", 
                             id='pl-trigger_button',
                             className="me-1",

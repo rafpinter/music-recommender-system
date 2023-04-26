@@ -17,13 +17,13 @@ import dash_bootstrap_components as dbc
 from urllib.parse import urlencode
 from dash import html, dcc, Dash
 from dash.dependencies import Output, Input, State
-from apps.screen import playlist_continuation
-from apps.screen import main_page
-from apps.screen.header import header
-from apps.functions.class_playlists import PLAYLISTRECSYS
-from apps.functions.graphs import *
-from apps.functions.callbacks import *
-from apps.functions.spotify_functions import (
+from src.screen import playlist_continuation
+from src.screen import main_page
+from src.screen.header import header
+from src.functions.class_playlists import PLAYLISTRECSYS
+from src.functions.graphs import *
+from src.functions.callbacks import *
+from src.functions.spotify_functions import (
     load_json, 
     load_data, 
     connect_to_spotify, 
