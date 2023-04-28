@@ -18,7 +18,7 @@ def create_radar_plot(df):
                 'valence': 'mean',
                 # 'tempo': 'mean',
             }).reset_index()
-    df_features
+    
     df_features = pd.melt(df_features, id_vars=['label', 'algorithm'], value_vars=['acousticness',
                                                                                   'danceability',
                                                                                   'energy',
