@@ -8,7 +8,7 @@ dash-bootstrap-components==1.1.0
 dash-core-components==2.0.0
 dash-html-components==2.0.0
 dash-table==5.0.0
-Flask==2.1.2
+flask>=2.2.5
 Flask-Compress==1.12
 idna==3.3
 implicit==0.5.2
